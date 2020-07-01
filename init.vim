@@ -21,14 +21,15 @@ endif
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'majutsushi/tagbar'
-
+Plug 'terryma/vim-multiple-cursors'
 
 "" Git
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
 "" Complete and snippets
-Plug 'neoclide/coc.nvim', { 'for': ['javascript'], 'do': { -> coc#util#install() }}
+" Plug 'neoclide/coc.nvim', { 'for': ['javascript'], 'do': { -> coc#util#install() }}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'maralla/completor.vim', { 'for': ['python', 'cpp'] }
 Plug 'tpope/vim-commentary'
 Plug 'jiangmiao/auto-pairs'
@@ -37,13 +38,18 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'Yggdroot/indentLine'
 Plug 'sheerun/vim-polyglot'
 Plug 'w0rp/ale', { 'for': ['python', 'javascript'], 'do': 'pip install isort flake8' }
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'kevinoid/vim-jsonc'
 
 "" Theme, Colors and icons
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one'
 Plug 'ryanoasis/vim-devicons'
+Plug '~/projetos/agua'
 
 "" Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
@@ -60,6 +66,7 @@ filetype plugin indent on
 "" Colorscheme.
 syntax on
 silent! colorscheme one
+set relativenumber
 set background=dark
 set ruler
 set cursorline
@@ -96,8 +103,8 @@ set termencoding=utf-8
 set autoindent
 set smartindent
 set backspace=indent,eol,start
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 set nu
 
@@ -221,6 +228,11 @@ let g:ale_sign_info = '⚠'
 let g:ale_sign_style_error = '⚠'
 let g:ale_sign_style_warning = '⚠'
 let g:ale_cache_executable_check_failures = 1
+let g:ale_fix_on_save = 1
+let g:ale_fixers = {
+\   'javascript': [ 'prettier', 'eslint' ],
+\   'json': [ 'prettier' ]
+\}
 
 "" Ctrlp
 set wildignore+=*/www/*,*/public/,*/.git/*
@@ -231,6 +243,8 @@ set wildignore+=*.pyc,*.db,*.sqlite,*.sqlite3
 
 "" FZF
 noremap <C-p> :FZF<CR>
+noremap <C-f> :Rg<CR>
+let g:fzf_preview_window = 'right:60%'
 nmap <leader>y :History:<CR>
 nmap <leader>b :Buffers<CR>
 
@@ -240,7 +254,6 @@ command! -bang -nargs=* Rg
             \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
             \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
             \   <bang>0)
-
 
 "" ripgrep
 if executable('rg')
@@ -292,7 +305,16 @@ nnoremap <silent> <F3> :NERDTreeToggle<CR>
 "" AleToggle
 nnoremap <silent> <leader>at :ALEToggle<CR>
 
-"" Gitgutter
+"" Prettier
+" let g:prettier#exec_cmd_path = "/Users/Zenobio/.vim/plugged/vim-prettier/node_modules/.bin/prettier"
+" let g:prettier#autoformat_require_pragma = 0
+" let g:prettier#config#print_width = 80
+" let g:prettier#config#tab_width = 4
+" let g:prettier#config#use_tabs = 'false'
+" let g:prettier#config#html_whitespace_sensitivity = 'css'
+
+
+" Gitgutter
 nnoremap <silent> <leader>gs :GitGutterToggle<CR>
 nmap <silent> <leader>gp <Plug>GitGutterPrevHunk
 nmap <silent> <leader>gn <Plug>GitGutterNextHunk
