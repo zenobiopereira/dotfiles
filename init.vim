@@ -33,6 +33,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'maralla/completor.vim', { 'for': ['python', 'cpp'] }
 Plug 'tpope/vim-commentary'
 Plug 'jiangmiao/auto-pairs'
+Plug 'amiralies/coc-elixir', {'do': 'yarn install && yarn prepack'}
 
 "" Syntax
 Plug 'Yggdroot/indentLine'
@@ -50,6 +51,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one'
 Plug 'ryanoasis/vim-devicons'
 Plug '~/projetos/agua'
+Plug 'dunstontc/vim-vscode-theme'
 
 "" Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
@@ -228,7 +230,9 @@ let g:ale_sign_info = '⚠'
 let g:ale_sign_style_error = '⚠'
 let g:ale_sign_style_warning = '⚠'
 let g:ale_cache_executable_check_failures = 1
+let g:ale_disable_lsp = 1
 let g:ale_fix_on_save = 1
+let g:ale_linters_explicit = 1
 let g:ale_fixers = {
 \   'javascript': [ 'prettier', 'eslint' ],
 \   'json': [ 'prettier' ]
@@ -305,19 +309,25 @@ nnoremap <silent> <F3> :NERDTreeToggle<CR>
 "" AleToggle
 nnoremap <silent> <leader>at :ALEToggle<CR>
 
-"" Prettier
-" let g:prettier#exec_cmd_path = "/Users/Zenobio/.vim/plugged/vim-prettier/node_modules/.bin/prettier"
-" let g:prettier#autoformat_require_pragma = 0
-" let g:prettier#config#print_width = 80
-" let g:prettier#config#tab_width = 4
-" let g:prettier#config#use_tabs = 'false'
-" let g:prettier#config#html_whitespace_sensitivity = 'css'
+" coc config
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ ]
+nmap <leader>gd <Plug>(coc-definition)
+nmap <leader>gr <Plug>(coc-references)
 
+" Nasm syntax
+let g:asmsyntax = 'nasm'
 
 " Gitgutter
 nnoremap <silent> <leader>gs :GitGutterToggle<CR>
-nmap <silent> <leader>gp <Plug>GitGutterPrevHunk
-nmap <silent> <leader>gn <Plug>GitGutterNextHunk
+nmap <silent> <leader>gp <Plug>(GitGutterPrevHunk)
+nmap <silent> <leader>gn <Plug>(GitGutterNextHunk)
 autocmd BufWritePost * GitGutter
 
 
@@ -327,7 +337,7 @@ nnoremap <silent> <leader>gb :Gblame<CR>
 nnoremap <silent> <leader>gc :Gcommit<CR>
 nnoremap <silent> <leader>gsh :Gpush<CR>
 nnoremap <silent> <leader>gll :Gpull<CR>
-nnoremap <silent> <leader>gr :Gremove<CR>
+" nnoremap <silent> <leader>gr :Gremove<CR>
 
 "" Maintain in Visual Mode
 vmap > >gv
@@ -349,6 +359,9 @@ cnoreabbrev W w
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
 cnoreabbrev Q q
+
+"" terminal rebind
+:tnoremap <Esc> <C-\><C-n>
 
 "" Move Entire Line with Shift
 nnoremap <A-j> :m .+1<CR>==

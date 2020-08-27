@@ -1,0 +1,25 @@
+{
+  // prettier
+  "prettier.semi": false,
+  "prettier.trailingComma": "es5",
+  "prettier.singleQuote": true,
+  "prettier.arrowParens":"avoid",
+
+  // Diagnose display so Ale doesn't try to conect to the sabe language server as coc
+  "diagnostic.displayByAle": true,
+
+  // suggestion
+  "suggest.noselect": false,
+  "suggest.autoTrigger": "always",
+  "typescript.suggest.enabled": true,
+
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "javascriptreact",
+    "typescript.tsx",
+    "graphql"
+  ]
+}
