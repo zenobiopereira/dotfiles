@@ -19,3 +19,11 @@ source ~/.vimrc
 ```shell
 sh -C "$(curl -o ~/.vimrc https://raw.githubusercontent.com/zenobiopereira/dotfiles/master/init.vim)"
 ```
+
+### ReasonML:
+- [Reason LSP](https://github.com/jaredly/reason-language-server)
+
+```shell
+sh -C "$(wget https://github.com/jaredly/reason-language-server/releases/download/1.7.13/rls-linux.zip && unzip -n rls-linux.zip -d ~)"
+
+```

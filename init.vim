@@ -14,7 +14,9 @@ call plug#begin(expand('~/.vim/plugged'))
 "" Browsing
 Plug 'scrooloose/nerdtree'
 if executable('fzf')
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
+  " Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
 else
     Plug 'kien/ctrlp.vim'
 endif
@@ -38,22 +40,35 @@ Plug 'amiralies/coc-elixir', {'do': 'yarn install && yarn prepack'}
 "" Syntax
 Plug 'Yggdroot/indentLine'
 Plug 'sheerun/vim-polyglot'
-Plug 'w0rp/ale', { 'for': ['python', 'javascript'], 'do': 'pip install isort flake8' }
+Plug 'dense-analysis/ale'
+" Plug 'w0rp/ale', { 'for': ['python', 'javascript'], 'do': 'pip install isort flake8' }
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'kevinoid/vim-jsonc'
+Plug 'elmcast/elm-vim'
 
 "" Theme, Colors and icons
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'rakr/vim-one'
 Plug 'ryanoasis/vim-devicons'
-Plug '~/projetos/agua'
 Plug 'dunstontc/vim-vscode-theme'
+Plug 'chriskempson/base16-vim'
+Plug 'KeitaNakamura/neodark.vim'
 
-"" Python
+"" ReasonMl
+Plug 'reasonml-editor/vim-reason-plus'
+
+"" Lisp
+Plug 'vlime/vlime', {'rtp': 'vim/'}
+Plug 'bhurlow/vim-parinfer'
+
+""SML
+Plug 'jez/vim-better-sml'
+
+""Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 
 "" HTML
@@ -66,8 +81,14 @@ call plug#end()
 filetype plugin indent on
 
 "" Colorscheme.
+if (has("gui_running"))
+  colorscheme one
+else
+  let g:neodark#background = '#202020'
+  colorscheme neodark
+endif
+
 syntax on
-silent! colorscheme one
 set relativenumber
 set background=dark
 set ruler
@@ -80,11 +101,13 @@ if (has("termguicolors"))
     set termguicolors
 endif
 
-"" Gui
+""" Gui
+"Previous Font: monofur\ Nerd\ Font\ Complete
+
 if has("macunix")
-    set guifont=monofur\ Nerd\ Font\ Complete:h14
+    set guifont=Fira\ Code\ Retina:h14
 else
-    set guifont=monofur\ Nerd\ Font\ Complete:h14
+    set guifont=Fira\ Code\ Retina:h14
     set t_Co=256
 endif
 set guioptions-=r
@@ -167,13 +190,15 @@ endif
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 
-"" Completor
+
+
+" Completor
 let g:completor_node_binary = '/usr/local/bin/node'
 let g:completor_clang_binary = '/usr/bin/clang++'
 let g:completor_disable_buffer = 0
 let g:completor_disable_filename = 0
 let g:completor_clang_disable_placeholders = 1
-noremap <silent> <C-d>  :call completor#do('definition')<CR>
+"" noremap <silent> <C-d>  :call completor#do('definition')<CR>
 
 if match(&runtimepath, 'completor') != -1
     echo "runtimpath completor"
@@ -184,7 +209,7 @@ let g:user_emmet_expandabbr_key='<C-z>'
 imap <expr> <C-z> emmet#expandAbbrIntelligent("\<C-z>")
 
 "" Polyglot
-let g:polyglot_disabled = ['python']
+let g:polyglot_disabled = ['python', 'elm']
 let python_highlight_all = 1
 
 "" Emmet
@@ -231,6 +256,7 @@ let g:ale_sign_style_error = '⚠'
 let g:ale_sign_style_warning = '⚠'
 let g:ale_cache_executable_check_failures = 1
 let g:ale_disable_lsp = 1
+let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 let g:ale_linters_explicit = 1
 let g:ale_fixers = {
@@ -238,7 +264,10 @@ let g:ale_fixers = {
 \   'json': [ 'prettier' ]
 \}
 
-"" Ctrlp
+let g:ale_linter_aliases = {'jsx': ['css', 'javascript'], 'tsx': ['css', 'javascript']}
+let g:ale_linters = {'jsx': ['stylelint', 'eslint'], 'elm': ['elm_ls']}
+
+"" Ctrlp ignore
 set wildignore+=*/www/*,*/public/,*/.git/*
 set wildignore+=*/node_modules/*,*/env/*
 set wildignore+=*/venv/*,*/__pycache__/*,
@@ -252,12 +281,14 @@ let g:fzf_preview_window = 'right:60%'
 nmap <leader>y :History:<CR>
 nmap <leader>b :Buffers<CR>
 
+
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
-            \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+            \   'rg --column --line-number --hidden --ignore-case --no-heading --color "always" '.shellescape(<q-args>), 1,
             \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
             \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
             \   <bang>0)
+
 
 "" ripgrep
 if executable('rg')
@@ -289,6 +320,9 @@ map  <C-l> <C-W>l
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
+"" Maximize/minimaze
+nnoremap <C-W>M <C-W>\| <C-W>_
+nnoremap <C-W>m <C-W>=
 
 "" Terminal
 nnoremap <silent> <leader>sh :terminal<CR>
@@ -310,6 +344,22 @@ nnoremap <silent> <F3> :NERDTreeToggle<CR>
 nnoremap <silent> <leader>at :ALEToggle<CR>
 
 " coc config
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
 let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-pairs',
@@ -318,16 +368,34 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-json',
   \ ]
-nmap <leader>gd <Plug>(coc-definition)
-nmap <leader>gr <Plug>(coc-references)
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> <leader>ff :call CocAction('format')<CR>
+
+" Prettier
+" let g:prettier#exec_cmd_path = "~/.vim/plugged/vim-prettier/node_modules/.bin/prettier"
+" let g:prettier#autoformat_require_pragma = 0
+" let g:prettier#config#print_width = 80
+" let g:prettier#config#tab_width = 8
+" let g:prettier#config#use_tabs = 'false'
+" let g:prettier#config#html_whitespace_sensitivity = 'css'
+
 
 " Nasm syntax
 let g:asmsyntax = 'nasm'
+
+" Elm
+let g:elm_format_autosave = 1
 
 " Gitgutter
 nnoremap <silent> <leader>gs :GitGutterToggle<CR>
 nmap <silent> <leader>gp <Plug>(GitGutterPrevHunk)
 nmap <silent> <leader>gn <Plug>(GitGutterNextHunk)
+nmap <silent> <leader>GD <Plug>(GitGutterPreviewHunk)
 autocmd BufWritePost * GitGutter
 
 
@@ -361,7 +429,8 @@ cnoreabbrev Q! q!
 cnoreabbrev Q q
 
 "" terminal rebind
-:tnoremap <Esc> <C-\><C-n>
+:tnoremap <C-\> <C-\><C-n>
+
 
 "" Move Entire Line with Shift
 nnoremap <A-j> :m .+1<CR>==

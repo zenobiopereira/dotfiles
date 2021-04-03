@@ -21,5 +21,13 @@
     "javascriptreact",
     "typescript.tsx",
     "graphql"
-  ]
+  ],
+
+  // Language server reasonMl https://github.com/jaredly/reason-language-server
+  "languageserver": {
+    "reason": {
+      "command": "/home/zenobio/rls-linux/reason-language-server",
+      "filetypes": ["reason"]
+    }
+  }
 }
