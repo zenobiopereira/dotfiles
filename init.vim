@@ -59,7 +59,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'KeitaNakamura/neodark.vim'
 
 "" ReasonMl
-Plug 'reasonml-editor/vim-reason-plus'
+Plug 'rescript-lang/vim-rescript'
 
 "" Lisp
 Plug 'vlime/vlime', {'rtp': 'vim/'}
@@ -284,9 +284,9 @@ nmap <leader>b :Buffers<CR>
 
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
-            \   'rg --column --line-number --hidden --ignore-case --no-heading --color "always" '.shellescape(<q-args>), 1,
+            \   'rg --column --line-number --hidden --ignore-case --no-heading --glob "!{node_modules/*}" --color "always" '.shellescape(<q-args>), 1,
             \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
-            \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+            \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%', '?'),
             \   <bang>0)
 
 
@@ -375,6 +375,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> <leader>ff :call CocAction('format')<CR>
+nnoremap <silent> <leader>dP :call CocAction('diagnosticPreview')<CR>
 
 " Prettier
 " let g:prettier#exec_cmd_path = "~/.vim/plugged/vim-prettier/node_modules/.bin/prettier"

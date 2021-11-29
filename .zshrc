@@ -1,8 +1,8 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/Zenobio/.oh-my-zsh"
+export ZSH="/home/zenobio/.oh-my-zsh"
 POWERLEVEL9K_MODE='nerdfont-complete'
 
 # Set name of the theme to load --- if set to "random", it will
@@ -18,11 +18,13 @@ ZSH_THEME='powerlevel10k/powerlevel10k'
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-export PATH="/Users/Zenobio/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PATH="/home/zenobio/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
-export PYTHONPATH="/Users/Zenobio/.pyenv/shims/python3:$PYTHONPATH"
+# export PYTHONPATH="/Users/Zenobio/.pyenv/shims/python3:$PYTHONPATH"
+
+export PYTHONPATH="$(which python3)"
 
 export PATH="/usr/local/opt/openssl/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/openssl/lib"
@@ -77,8 +79,13 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  # zsh-autosuggestions
   zsh-syntax-highlighting
-)
+  nvm
+  asdf
+  docker
+  docker-compose
+  )
 
 source $ZSH/oh-my-zsh.sh
 
@@ -103,12 +110,17 @@ source $ZSH/oh-my-zsh.sh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon pyenv dir vcs)
 
 POWERLEVEL9K_OS_ICON_BACKGROUND="white"
-POWERLEVEL9K_OS_ICON_FOREGROUND="blue"
+POWERLEVEL9K_OS_ICON_FOREGROUND="black"
+POWERLEVEL9K_PYENV_BACKGROUND="grey35"
+POWERLEVEL9K_PYENV_FOREGROUND="cyan"
+POWERLEVEL9K_DIR_HOME_BACKGROUND="dodgerblue4a"
 POWERLEVEL9K_DIR_HOME_FOREGROUND="white"
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND="white"
+# POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="dodgerblue4a"
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="grey7"
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND="lightcyan3"
 POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="white"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
@@ -118,7 +130,22 @@ POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="white"
 #
 # Example aliases
 alias zshconfig="nvim ~/.zshrc"
+alias vimconfig="nvim ~/.vimrc"
+alias vlimeopen="sbcl --load ~/.vim/plugged/vlime/lisp/start-vlime.lisp"
+alias sbcl="rlwrap sbcl"
+
+# alias pbcopy | pbpaste for linux
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+###
+
+alias ngrok="~/./ngrok"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+# asdf
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
