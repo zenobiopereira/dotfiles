@@ -47,7 +47,15 @@ vim.keymap.set("n", "Q", "<nop>")
 -- vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
 -- Format buffer.
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+-- vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+vim.keymap.set("n", "<leader>f", function()
+    require("conform").format({
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 500,
+    })
+end)
+vim.keymap.set("n", "<leader><C-f>", function() vim.cmd("EslintFixAll") end)
 
 -- Movement under Quick List.
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")

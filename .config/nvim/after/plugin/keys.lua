@@ -27,6 +27,10 @@ wk.register({
     ["<leader>u"] = { "Undotree Toggle." }
 })
 
+wk.register({
+    ["<leader>gr"] = { "Add occurences to QuickList."}
+})
+
 
 -- LSP within buffer registers.
 wk.register({
@@ -74,4 +78,5 @@ wk.register({
     ["<leader>j"] = { "Prev entry on Location List." },
     ["<leader>s"] = { "Quick replace word under cursor." },
     ["<leader>f"] = { "Format buffer." },
+    ["<leader><C-f>"] = { "Eslint Format buffer." },
 })

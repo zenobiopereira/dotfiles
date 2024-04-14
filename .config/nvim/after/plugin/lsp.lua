@@ -5,10 +5,10 @@ local lsp = require("lsp-zero")
 
 lsp.preset("recommended")
 
-lsp.ensure_installed({
-    'tsserver',
-    'rust_analyzer',
-})
+-- lsp.ensure_installed({
+--     'eslint',
+--     'tsserver'
+-- })
 
 -- Fix Undefined global 'vim'
 lsp.nvim_workspace()
@@ -25,7 +25,7 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
 })
 
 -- cmp_mappings['<Tab>'] = cmp.mapping
-cmp_mappings['<S-Tab>'] = nil
+-- cmp_mappings['<S-Tab>'] = nil
 
 
 lsp.setup_nvim_cmp({
@@ -53,10 +53,21 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>vrf", function() vim.lsp.buf.references() end, opts)
     vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
+    end)
 
-lsp.setup()
+lsp.setup({
+})
+
+-- Needs glslls.lua within the nvim-lspconfig.
+require("lspconfig").glslls.setup {}
+
+-- require('lspconfig').eslint.setup {}
+-- vim.list_extend(vim.lsp.override, {
+--   "glsl-language-server",
+-- })
+--
 
 vim.diagnostic.config({
-    virtual_text = true
+    virtual_text = true,
+    underline = true,
 })
